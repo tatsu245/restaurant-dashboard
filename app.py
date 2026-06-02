@@ -144,13 +144,13 @@ def run_ai_analysis(sales_df, cust_df) -> str:
     except Exception:
         api_key = ""
     if not api_key:
-        return "💡 AI分析はStreamlit Cloudデプロイ後にご利用いただけます。"
+        return "💡 AI分析を利用するにはAPIキーの設定が必要です。"
     client = anthropic.Anthropic(api_key=api_key)
     prompt = build_analysis_prompt(sales_df, cust_df)
-    with st.spinner("Claude が分析中..."):
+    with st.spinner("aumo AI が分析中..."):
         message = client.messages.create(
             model="claude-sonnet-4-6",
-            max_tokens=2000,
+            max_tokens=8192,
             messages=[{"role": "user", "content": prompt}],
         )
     return message.content[0].text
@@ -226,7 +226,7 @@ st.divider()
 
 # ── AI分析 ───────────────────────────────────────────
 with st.expander("🤖 AIによる示唆・分析", expanded=False):
-    if st.button("Claude に分析させる", type="primary"):
+    if st.button("aumo AI に分析させる", type="primary"):
         result = run_ai_analysis(sales_df, cust_df)
         st.session_state["ai_result"] = result
     if "ai_result" in st.session_state:
